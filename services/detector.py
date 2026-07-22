@@ -1,5 +1,5 @@
+import cv2
 from insightface.app import FaceAnalysis
-from typing import List
 
 from config import (
     MIN_CONFIDENCE,
@@ -39,3 +39,23 @@ class FaceDetector:
             )
 
         return results
+
+    def draw_faces(self, frame, faces):
+        for face in faces:
+            cv2.rectangle(
+                frame,
+                (face.x1, face.y1),
+                (face.x2, face.y2),
+                (0, 255, 0),
+                2
+            )
+
+            cv2.putText(
+                frame,
+                f"{face.confidence:.2f}",
+                (face.x1, face.y1 - 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 255, 0),
+                2,
+            )

@@ -3,6 +3,9 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+EMBEDDING_EXTENSION = ".npy"
+PORTRAIT_EXTENSION = ".jpg"
+
 class UserRepository:
     def __init__(self):
         self.embedding_path = Path("storage/embeddings")
@@ -19,16 +22,16 @@ class UserRepository:
             portrait,
         )
 
-    def save_embedding(self, user_id: str, embedding):
-        path = self.embedding_path / f"{user_id}.npy"
+    def save_embedding(self, user_id: str, embedding) -> None:
+        path = self.embedding_path / f"{user_id}{EMBEDDING_EXTENSION}"
 
         np.save(
             path,
             embedding,
         )
 
-    def load_embedding(self, user_id: str):
-        path = self.embedding_path / f"{user_id}.npy"
+    def load_embedding(self, user_id: str) -> np.ndarray | None:
+        path = self.embedding_path / f"{user_id}{EMBEDDING_EXTENSION}"
 
         if not path.exists():
             return None
@@ -38,10 +41,10 @@ class UserRepository:
     def exists( self, user_id: str) -> bool:
         return (
             self.embedding_path /
-            f"{user_id}.npy"
+            f"{user_id}{EMBEDDING_EXTENSION}"
         ).exists()
 
-    def load_all_embeddings(self):
+    def load_all_embeddings(self)-> dict[str, np.ndarray]:
         embeddings = {}
 
         for file in self.embedding_path.glob("*.npy"):

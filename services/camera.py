@@ -1,5 +1,4 @@
 import cv2
-from typing import Optional
 
 class CameraService:
     # Function

@@ -1,38 +1,38 @@
 import cv2
 
+from repository.user_repository import UserRepository
 from services.camera import CameraService
 from services.detector import FaceDetector
 from services.registration import RegistrationService
+from services.verifier import VerificationService
 
-camera = CameraService(camera_index=0, width=640, height=480, mirror=True)
-detector = FaceDetector()   
-registration_service = RegistrationService()
+camera = CameraService(
+    camera_index=0,
+    width=640,
+    height=480,
+    mirror=True,
+)
 
+detector = FaceDetector()
+
+repository = UserRepository()
+
+registration = RegistrationService(
+    detector=detector,
+    repository=repository,
+)
+
+verification = VerificationService(
+    detector=detector,
+    repository=repository,
+)
 while True:
     frame = camera.read()
     if frame is None:
         break
     faces = detector.detect(frame)
     for face in faces:
-        x1, y1, x2, y2 = face.bbox.astype(int)
-
-        cv2.rectangle(
-            frame,
-            (face.x1, face.y1),
-            (face.x2, face.y2),
-            (0, 255, 0),
-            2
-        )
-
-        cv2.putText(
-            frame,
-            f"{face.confidence:.2f}",
-            (face.x1, face.y1 - 10),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.5,
-            (0, 255, 0),
-            2,
-        )
+       detector.draw_faces(frame, [face])
 
     cv2.imshow("Camera", frame)
     if cv2.waitKey(1) == 27:
