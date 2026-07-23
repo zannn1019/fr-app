@@ -40,22 +40,23 @@ class FaceDetector:
 
         return results
 
-    def draw_faces(self, frame, faces):
+    def draw_faces(self, frame, faces, result):
         for face in faces:
+            border_color = (0, 255, 0) if result.user_id else (0, 0, 255)
             cv2.rectangle(
                 frame,
                 (face.x1, face.y1),
                 (face.x2, face.y2),
-                (0, 255, 0),
+                border_color,
                 2
             )
 
             cv2.putText(
                 frame,
-                f"{face.confidence:.2f}",
+                f"User ID: {result.user_id}" if result.user_id else f"Confidence: {result.similarity:.2f}",
                 (face.x1, face.y1 - 10),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
-                (0, 255, 0),
+                border_color,
                 2,
             )

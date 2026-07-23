@@ -30,9 +30,27 @@ while True:
     frame = camera.read()
     if frame is None:
         break
+
     faces = detector.detect(frame)
-    for face in faces:
-       detector.draw_faces(frame, [face])
+    result = verification.verify(frame)
+    detector.draw_faces(frame, faces, result)
+    key = cv2.waitKey(1) & 0xFF
+
+    if key == ord("r"):
+        user_id = input("Enter User ID: ")
+
+        try:
+            registration.register(
+                user_id=user_id,
+                image=frame,
+            )
+
+            print("Registration successful!")
+
+        except Exception as e:
+            print(e)
+            
+    print(f"User ID: {result.user_id}, Similarity: {result.similarity:.2f}")
 
     cv2.imshow("Camera", frame)
     if cv2.waitKey(1) == 27:

@@ -55,6 +55,7 @@ ENV/
 env/
 env.bak/
 venv.bak/
+.env
 
 # IDEs and editors
 .idea/

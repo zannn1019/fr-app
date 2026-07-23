@@ -5,7 +5,7 @@ from utils.similarity import cosine_similarity
 
 class VerificationService:
 
-    THRESHOLD = 0.75
+    THRESHOLD = 0.5
 
     def __init__(
         self,

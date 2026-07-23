@@ -9,17 +9,19 @@ class RegistrationService:
         self.detector = detector
         self.repository = repository
 
-    def register(self, user_id, image):
+    def register(self, user_id: str, image):
         self._ensure_user_does_not_exist(user_id)
 
-        image = self._load_image(image)
         face = self._detect_single_face(image)
         portrait = self._extract_portrait(image, face)
 
         self.repository.save_portrait(user_id, portrait)
         self.repository.save_embedding(user_id, face.embedding)
 
-        return RegistrationResult(success=True, user_id=user_id)
+        return RegistrationResult(
+            success=True,
+            user_id=user_id,
+        )
 
     def _ensure_user_does_not_exist(self, user_id):
         if self.repository.exists(user_id):
